@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -18,6 +19,8 @@ public class Produto implements Serializable {
     private Integer id;
     private String nome;
     private Double preco;
+
+    @JsonBackReference //Parte contraria do @JsonManagedReference. Omitido na serializacao
     @ManyToMany
     @JoinTable(
             name = "PRODUTO_CATEGORIA",
