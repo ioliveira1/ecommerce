@@ -2,13 +2,11 @@ package com.ioliveira.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @EqualsAndHashCode(of = {"id"})
-@ToString
 @Entity
 public class Cidade implements Serializable {
 

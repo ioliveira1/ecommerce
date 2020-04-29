@@ -2,7 +2,6 @@ package com.ioliveira.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(of = {"id"})
-@ToString
 @Entity
 public class Estado implements Serializable {
 
@@ -22,7 +20,7 @@ public class Estado implements Serializable {
     @OneToMany(mappedBy = "estado")
     private List<Cidade> cidades = new ArrayList<>();
 
-    public Estado(){
+    public Estado() {
     }
 
     public Estado(String nome) {
