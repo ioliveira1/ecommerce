@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ioliveira.ecommerce.entities.enums.EstadoPagamento;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +15,7 @@ public abstract class Pagamento implements Serializable {
     @Id
     private Integer id;
     private Integer estadoPagamento;
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "pedido_id")
     @MapsId

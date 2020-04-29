@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
@@ -16,13 +17,16 @@ public class Pedido implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDateTime data;
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
     private Pagamento pagamento;
+    @JsonManagedReference
     @ManyToOne
     private Cliente cliente;
     @ManyToOne
     private Endereco enderecoEntrega;
     @OneToMany(mappedBy = "id.pedido")
+    @JsonManagedReference
     private Set<ItemPedido> itens = new HashSet<>();
 
     public Pedido() {
