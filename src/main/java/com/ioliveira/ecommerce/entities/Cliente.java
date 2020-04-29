@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ioliveira.ecommerce.entities.enums.TipoCliente;
 import lombok.EqualsAndHashCode;
 
@@ -21,6 +22,7 @@ public class Cliente implements Serializable {
     private String email;
     private String cpfCnpj;
     private Integer tipoCliente;
+    @JsonManagedReference
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos = new ArrayList<>();
     @ElementCollection

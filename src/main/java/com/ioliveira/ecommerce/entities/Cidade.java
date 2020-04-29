@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -16,6 +17,7 @@ public class Cidade implements Serializable {
     private Integer id;
     private String nome;
     @ManyToOne
+    @JsonManagedReference
     private Estado estado;
 
     public Cidade() {
