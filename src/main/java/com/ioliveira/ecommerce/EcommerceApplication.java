@@ -1,6 +1,7 @@
 package com.ioliveira.ecommerce;
 
 import com.ioliveira.ecommerce.entities.*;
+import com.ioliveira.ecommerce.entities.enums.EstadoPagamento;
 import com.ioliveira.ecommerce.entities.enums.TipoCliente;
 import com.ioliveira.ecommerce.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -26,6 +28,10 @@ public class EcommerceApplication implements CommandLineRunner {
     private ClienteRepository clienteRepository;
     @Autowired
     private EnderecoRepository enderecoRepository;
+    @Autowired
+    private PedidoRepository pedidoRepository;
+    @Autowired
+    private PagamentoRepository pagamentoRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(EcommerceApplication.class, args);
@@ -74,5 +80,21 @@ public class EcommerceApplication implements CommandLineRunner {
 
         clienteRepository.save(cli1);
         enderecoRepository.saveAll(Arrays.asList(e1, e2));
+
+        Pedido ped1 = new Pedido(LocalDateTime.of(2017, 9, 30, 10, 32), cli1, e1);
+        Pedido ped2 = new Pedido(LocalDateTime.of(2017, 10, 10, 19, 35), cli1, e2);
+
+        Pagamento pagto1 = new PagamentoCartao(EstadoPagamento.QUITADO, ped1, 6);
+        Pagamento pagto2 = new PagamentoBoleto(EstadoPagamento.PENDENTE, ped2,
+                LocalDateTime.of(2017, 10, 20, 0, 0), null);
+
+        ped1.setPagamento(pagto1);
+        ped2.setPagamento(pagto2);
+
+        cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+
+        pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+        pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+
     }
 }
