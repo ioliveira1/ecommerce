@@ -1,6 +1,5 @@
 package com.ioliveira.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
@@ -14,8 +13,8 @@ public class Cidade implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
+
     @ManyToOne
-    @JsonManagedReference
     private Estado estado;
 
     public Cidade() {

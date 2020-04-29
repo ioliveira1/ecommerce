@@ -1,6 +1,5 @@
 package com.ioliveira.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
@@ -21,7 +20,7 @@ public class Produto implements Serializable {
     private String nome;
     private Double preco;
 
-    @JsonBackReference //Parte contraria do @JsonManagedReference. Omitido na serializacao
+    @JsonIgnore //Parte contraria do @JsonManagedReference. Omitido na serializacao
     @ManyToMany
     @JoinTable(
             name = "PRODUTO_CATEGORIA",
@@ -29,6 +28,7 @@ public class Produto implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )
     private List<Categoria> categorias = new ArrayList<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "id.pedido")
     private Set<ItemPedido> itens = new HashSet<>();

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ClienteService {
 
     @Autowired
-    ClienteRepository clienteRepository;
+    private ClienteRepository clienteRepository;
 
     public Cliente findById(Integer id){
         return clienteRepository.findById(id)

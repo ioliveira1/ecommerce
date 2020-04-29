@@ -12,6 +12,7 @@ public class ItemPedidoPK implements Serializable {
 
     @ManyToOne
     private Pedido pedido;
+
     @ManyToOne
     private Produto produto;
 

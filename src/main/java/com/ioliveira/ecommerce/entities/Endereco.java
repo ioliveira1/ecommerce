@@ -1,7 +1,6 @@
 package com.ioliveira.ecommerce.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
@@ -19,11 +18,12 @@ public class Endereco implements Serializable {
     private String complemento;
     private String bairro;
     private String cep;
+
+    @JsonIgnore
     @ManyToOne
-    @JsonBackReference
     private Cliente cliente;
+
     @ManyToOne
-    @JsonManagedReference
     private Cidade cidade;
 
     public Endereco() {
