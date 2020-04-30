@@ -38,4 +38,10 @@ public class CategoriaController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
+        categoriaService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
