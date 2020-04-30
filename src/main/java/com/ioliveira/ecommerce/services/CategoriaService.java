@@ -21,4 +21,14 @@ public class CategoriaService {
         return categoriaRepository.save(categoria);
     }
 
+    public void update(Categoria categoria) {
+        Categoria categoriaDB = findById(categoria.getId());
+        categoriaUpdated(categoriaDB, categoria.getNome());
+    }
+
+    private void categoriaUpdated(Categoria categoria, String nomeCategoria) {
+        categoria.setNome(nomeCategoria);
+        categoriaRepository.save(categoria);
+    }
+
 }
