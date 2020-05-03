@@ -1,4 +1,4 @@
-package com.ioliveira.ecommerce.controllers.dto;
+package com.ioliveira.ecommerce.controllers.dto.response;
 
 import com.ioliveira.ecommerce.entities.Categoria;
 import lombok.*;
@@ -10,11 +10,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Builder(toBuilder = true)
-public class CategoriaDTO implements Serializable {
+public class CategoriaResponseDTO implements Serializable {
     private Integer id;
     private String nome;
 
-    public CategoriaDTO(Categoria categoria) {
+    public CategoriaResponseDTO(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
     }

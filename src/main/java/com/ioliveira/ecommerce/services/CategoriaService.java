@@ -1,6 +1,7 @@
 package com.ioliveira.ecommerce.services;
 
-import com.ioliveira.ecommerce.controllers.dto.CategoriaDTO;
+import com.ioliveira.ecommerce.controllers.dto.request.CategoriaRequestDTO;
+import com.ioliveira.ecommerce.controllers.dto.response.CategoriaResponseDTO;
 import com.ioliveira.ecommerce.entities.Categoria;
 import com.ioliveira.ecommerce.repositories.CategoriaRepository;
 import com.ioliveira.ecommerce.services.exceptions.DataIntegrityException;
@@ -21,11 +22,11 @@ public class CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    public List<CategoriaDTO> findAll() {
+    public List<CategoriaResponseDTO> findAll() {
         List<Categoria> categoriaList = categoriaRepository.findAll();
         return categoriaList
                 .stream()
-                .map(CategoriaDTO::new)
+                .map(CategoriaResponseDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -34,18 +35,19 @@ public class CategoriaService {
                 .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! ID: " + id));
     }
 
-    public Page<CategoriaDTO> findPage(Integer page, Integer linesPerPage, String direction, String orderBy) {
+    public Page<CategoriaResponseDTO> findPage(Integer page, Integer linesPerPage, String direction, String orderBy) {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-        return categoriaRepository.findAll(pageRequest).map(CategoriaDTO::new);
+        return categoriaRepository.findAll(pageRequest).map(CategoriaResponseDTO::new);
     }
 
-    public Categoria insert(Categoria categoria) {
+    public Categoria insert(CategoriaRequestDTO requestDTO) {
+        Categoria categoria = convertToEntity(requestDTO);
         return categoriaRepository.save(categoria);
     }
 
-    public void update(Categoria categoria) {
-        Categoria categoriaDB = findById(categoria.getId());
-        categoriaUpdated(categoriaDB, categoria.getNome());
+    public void update(Integer id, CategoriaRequestDTO requestDTO) {
+        Categoria categoriaDB = findById(id);
+        categoriaUpdated(categoriaDB, requestDTO.getNome());
     }
 
     public void deleteById(Integer id) {
@@ -60,6 +62,10 @@ public class CategoriaService {
     private void categoriaUpdated(Categoria categoria, String nomeCategoria) {
         categoria.setNome(nomeCategoria);
         categoriaRepository.save(categoria);
+    }
+
+    private Categoria convertToEntity(CategoriaRequestDTO requestDTO) {
+        return new Categoria(requestDTO.getNome());
     }
 
 }
