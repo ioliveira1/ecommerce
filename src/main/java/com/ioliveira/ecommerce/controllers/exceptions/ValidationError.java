@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationError extends StandardError {
-    private List<FieldMessage> errors = new ArrayList<>();
+    private final List<FieldMessage> errors = new ArrayList<>();
 
     public ValidationError(Integer status, String message, String path, LocalDateTime timestamp) {
         super(status, message, path, timestamp);
