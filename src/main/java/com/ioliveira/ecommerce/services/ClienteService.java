@@ -61,7 +61,7 @@ public class ClienteService {
         try {
             clienteRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityException("Erro ao deletar cliente.");
+            throw new DataIntegrityException("Não é possível deletar um Cliente que possui pedidos associados.");
         }
     }
 
