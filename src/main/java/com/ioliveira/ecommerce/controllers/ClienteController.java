@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.controllers;
 
+import com.ioliveira.ecommerce.controllers.dto.request.ClienteInsertDTO;
 import com.ioliveira.ecommerce.controllers.dto.request.ClienteRequestDTO;
 import com.ioliveira.ecommerce.controllers.dto.response.ClienteResponseDTO;
 import com.ioliveira.ecommerce.entities.Cliente;
@@ -8,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -48,6 +51,17 @@ public class ClienteController {
     public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
         clienteService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> insert(@Valid @RequestBody ClienteInsertDTO insertDTO) {
+        Cliente insert = clienteService.insert(insertDTO);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(insert.getId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
 }

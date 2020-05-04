@@ -1,9 +1,15 @@
 package com.ioliveira.ecommerce.services;
 
+import com.ioliveira.ecommerce.controllers.dto.request.ClienteInsertDTO;
 import com.ioliveira.ecommerce.controllers.dto.request.ClienteRequestDTO;
 import com.ioliveira.ecommerce.controllers.dto.response.ClienteResponseDTO;
+import com.ioliveira.ecommerce.entities.Cidade;
 import com.ioliveira.ecommerce.entities.Cliente;
+import com.ioliveira.ecommerce.entities.Endereco;
+import com.ioliveira.ecommerce.entities.enums.TipoCliente;
+import com.ioliveira.ecommerce.repositories.CidadeRepository;
 import com.ioliveira.ecommerce.repositories.ClienteRepository;
+import com.ioliveira.ecommerce.repositories.EnderecoRepository;
 import com.ioliveira.ecommerce.services.exceptions.DataIntegrityException;
 import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +28,10 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired
+    private CidadeRepository cidadeRepository;
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
     public List<ClienteResponseDTO> findAll() {
         List<Cliente> clienteList = clienteRepository.findAll();
@@ -58,6 +69,33 @@ public class ClienteService {
         cliente.setNome(nomeCliente);
         cliente.setEmail(email);
         clienteRepository.save(cliente);
+    }
+
+    @Transactional
+    public Cliente insert(ClienteInsertDTO insertDTO) {
+        Cliente cliente = convertToEntity(insertDTO);
+        enderecoRepository.saveAll(cliente.getEnderecos());
+        return clienteRepository.save(cliente);
+    }
+
+    private Cliente convertToEntity(ClienteInsertDTO insertDTO) {
+        Cliente cliente = new Cliente(insertDTO.getNome(), insertDTO.getEmail(), insertDTO.getCpfCnpj(),
+                TipoCliente.toEnum(insertDTO.getTipoCliente()));
+
+        Cidade cidade = findCidadeById(insertDTO.getCidadeId());
+
+        Endereco endereco = new Endereco(insertDTO.getLogradouro(), insertDTO.getNumero(),
+                insertDTO.getComplemento(), insertDTO.getBairro(), insertDTO.getCep(), cliente, cidade);
+
+        cliente.getEnderecos().add(endereco);
+        cliente.setTelefones(insertDTO.getTelefones());
+
+        return cliente;
+    }
+
+    private Cidade findCidadeById(Integer id) {
+        return cidadeRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! ID: " + id));
     }
 
 }
