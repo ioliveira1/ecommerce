@@ -68,7 +68,13 @@ public class ClienteService {
     private void clienteUpdated(Cliente cliente, String nomeCliente, String email) {
         cliente.setNome(nomeCliente);
         cliente.setEmail(email);
-        clienteRepository.save(cliente);
+        try {
+            clienteRepository.save(cliente);
+        } catch (DataIntegrityViolationException e) {
+            //Atributo email da entidade Cliente anotado com @Column(unique = true)
+            //Nao permite repeticoes. Chave unica
+            throw new DataIntegrityException("Email já cadastrado!");
+        }
     }
 
     @Transactional
