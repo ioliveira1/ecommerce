@@ -75,7 +75,13 @@ public class ClienteService {
     public Cliente insert(ClienteInsertDTO insertDTO) {
         Cliente cliente = convertToEntity(insertDTO);
         enderecoRepository.saveAll(cliente.getEnderecos());
-        return clienteRepository.save(cliente);
+        try {
+            return clienteRepository.save(cliente);
+        } catch (DataIntegrityViolationException e){
+            //Atributo email da entidade Cliente anotado com @Column(unique = true)
+            //Nao permite repeticoes. Chave unica
+            throw new DataIntegrityException("Email já cadastrado!");
+        }
     }
 
     private Cliente convertToEntity(ClienteInsertDTO insertDTO) {
