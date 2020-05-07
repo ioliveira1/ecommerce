@@ -1,6 +1,7 @@
 package com.ioliveira.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ioliveira.ecommerce.entities.enums.EstadoPagamento;
 import lombok.EqualsAndHashCode;
 
@@ -10,6 +11,9 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+//Permite a instanciacao de subclasses a partir de dados JSON
+//A classe Pagamento tem um campo adicional chamado "@type"
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@type")
 public abstract class Pagamento implements Serializable {
 
     @Id

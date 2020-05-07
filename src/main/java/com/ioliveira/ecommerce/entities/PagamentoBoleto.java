@@ -1,5 +1,7 @@
 package com.ioliveira.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.ioliveira.ecommerce.entities.enums.EstadoPagamento;
 
 import javax.persistence.Entity;
@@ -7,6 +9,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+//Campo adcional da classe enviado por JSON na anotacao da superclasse no campo @type
+@JsonTypeName("pagamentoBoleto")
 public class PagamentoBoleto extends Pagamento implements Serializable {
 
     private LocalDateTime dataVencimento;
@@ -21,6 +25,7 @@ public class PagamentoBoleto extends Pagamento implements Serializable {
         this.dataPagamento = dataPagamento;
     }
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     public LocalDateTime getDataVencimento() {
         return dataVencimento;
     }
@@ -29,6 +34,7 @@ public class PagamentoBoleto extends Pagamento implements Serializable {
         this.dataVencimento = dataVencimento;
     }
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     public LocalDateTime getDataPagamento() {
         return dataPagamento;
     }

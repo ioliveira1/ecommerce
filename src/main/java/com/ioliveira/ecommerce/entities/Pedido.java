@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
@@ -42,6 +43,7 @@ public class Pedido implements Serializable {
         return id;
     }
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     public LocalDateTime getData() {
         return data;
     }
