@@ -33,10 +33,11 @@ public class ClienteController {
     }
 
     @GetMapping(path = "/page")
-    public ResponseEntity<Page<ClienteResponseDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                             @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                             @RequestParam(value = "direction", defaultValue = "ASC") String direction,
-                                                             @RequestParam(value = "orderBy", defaultValue = "nome") String orderBy) {
+    public ResponseEntity<Page<ClienteResponseDTO>> findPage(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "orderBy", defaultValue = "nome") String orderBy) {
         return ResponseEntity.ok().body(clienteService.findPage(page, linesPerPage, direction, orderBy));
     }
 
