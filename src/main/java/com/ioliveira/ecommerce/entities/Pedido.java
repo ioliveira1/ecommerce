@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -86,5 +87,24 @@ public class Pedido implements Serializable {
 
     public double getValorTotal() {
         return itens.stream().mapToDouble(ItemPedido::getSubtotal).sum();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Pedido ");
+        sb.append("numero: ").append(id);
+        sb.append("\n");
+        sb.append("Data: ").append(data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+        sb.append("\n");
+        sb.append("Pagamento: ").append(pagamento.getEstadoPagamento().getDescricao());
+        sb.append("\n");
+        sb.append("Cliente: ").append(cliente.getNome());
+        sb.append("\n");
+        sb.append("Detalhes: ");
+        sb.append("\n");
+        getItens().forEach(item -> sb.append(item.toString()));
+        sb.append("\n");
+        sb.append("Valor total: ").append(getValorTotal());
+        return sb.toString();
     }
 }

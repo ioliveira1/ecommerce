@@ -34,7 +34,7 @@ public class ItemPedido implements Serializable {
         return id.getPedido();
     }
 
-    public void setPedido (Pedido pedido){
+    public void setPedido(Pedido pedido) {
         id.setPedido(pedido);
     }
 
@@ -42,7 +42,7 @@ public class ItemPedido implements Serializable {
         return id.getProduto();
     }
 
-    public void setProduto (Produto produto){
+    public void setProduto(Produto produto) {
         id.setProduto(produto);
     }
 
@@ -74,7 +74,18 @@ public class ItemPedido implements Serializable {
         this.preco = preco;
     }
 
-    public double getSubtotal(){
+    public double getSubtotal() {
         return (preco - desconto) * quantidade;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getProduto().getNome() + "{ ");
+        sb.append("Quantidade: ").append(quantidade);
+        sb.append(", Preco unitário: ").append(preco);
+        sb.append(", Subtotal: R$").append(getSubtotal());
+        sb.append('}');
+        sb.append("\n");
+        return sb.toString();
     }
 }
