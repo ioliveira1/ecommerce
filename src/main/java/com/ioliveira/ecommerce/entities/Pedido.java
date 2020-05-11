@@ -93,15 +93,10 @@ public class Pedido implements Serializable {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Pedido ");
         sb.append("numero: ").append(id);
-        sb.append("\n");
-        sb.append("Data: ").append(data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
-        sb.append("\n");
-        sb.append("Pagamento: ").append(pagamento.getEstadoPagamento().getDescricao());
-        sb.append("\n");
-        sb.append("Cliente: ").append(cliente.getNome());
-        sb.append("\n");
-        sb.append("Detalhes: ");
-        sb.append("\n");
+        sb.append("\nData: ").append(data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+        sb.append("\nPagamento: ").append(pagamento.getEstadoPagamento().getDescricao());
+        sb.append("\nCliente: ").append(cliente.getNome());
+        sb.append("\nDetalhes:\n");
         getItens().forEach(item -> sb.append(item.toString()));
         sb.append("\n");
         sb.append("Valor total: ").append(getValorTotal());

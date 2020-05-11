@@ -1,3 +1,7 @@
 spring:
   profiles:
     active: "test"
+
+default:
+  sender: "igorfoliveira@gmail.com"
+  recipient: "igorfoliveira@gmail.com"

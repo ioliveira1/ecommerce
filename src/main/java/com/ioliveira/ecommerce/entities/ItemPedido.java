@@ -80,7 +80,7 @@ public class ItemPedido implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(getProduto().getNome() + "{ ");
+        final StringBuilder sb = new StringBuilder(getProduto().getNome() + " {");
         sb.append("Quantidade: ").append(quantidade);
         sb.append(", Preco unitário: ").append(preco);
         sb.append(", Subtotal: R$").append(getSubtotal());

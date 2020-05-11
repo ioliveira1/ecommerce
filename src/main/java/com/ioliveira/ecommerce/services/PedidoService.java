@@ -7,6 +7,7 @@ import com.ioliveira.ecommerce.repositories.ItemPedidoRepository;
 import com.ioliveira.ecommerce.repositories.PagamentoRepository;
 import com.ioliveira.ecommerce.repositories.PedidoRepository;
 import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
+import com.ioliveira.ecommerce.services.email.EmailService;
 import com.ioliveira.ecommerce.services.utils.BoletoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class PedidoService {
     private ItemPedidoRepository itemPedidoRepository;
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private EmailService emailService;
 
     public Pedido findById(Integer id) {
         return pedidoRepository.findById(id)
@@ -54,7 +58,8 @@ public class PedidoService {
         });
 
         itemPedidoRepository.saveAll(pedidoSaved.getItens());
-        System.out.println(pedidoSaved);
+
+        emailService.sendEmail(pedidoSaved);
 
         return pedidoSaved;
     }
