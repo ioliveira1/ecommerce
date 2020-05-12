@@ -5,6 +5,7 @@ import com.ioliveira.ecommerce.entities.enums.EstadoPagamento;
 import com.ioliveira.ecommerce.entities.enums.TipoCliente;
 import com.ioliveira.ecommerce.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,8 @@ public class DBService {
     private PagamentoRepository pagamentoRepository;
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public void instantiateTestDataBase() {
 
@@ -91,7 +94,7 @@ public class DBService {
         estadoRepository.saveAll(Arrays.asList(est1, est2));
         cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-        Cliente cli1 = new Cliente("Maria Silva", "igorfoliveira@gmail.com", "11111111111", TipoCliente.PESSOA_FISICA);
+        Cliente cli1 = new Cliente("Maria Silva", "igorfoliveira@gmail.com", "11111111111", TipoCliente.PESSOA_FISICA, passwordEncoder.encode("123"));
         cli1.getTelefones().addAll(Arrays.asList("22334455", "911112222"));
 
         Endereco e1 = new Endereco("Rua Flores", "300", "Apto 203", "Jardim", "03355010", cli1, c1);

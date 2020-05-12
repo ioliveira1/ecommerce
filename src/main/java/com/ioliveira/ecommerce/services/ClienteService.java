@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,8 @@ public class ClienteService {
     private CidadeRepository cidadeRepository;
     @Autowired
     private EnderecoRepository enderecoRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public List<ClienteResponseDTO> findAll() {
         List<Cliente> clienteList = clienteRepository.findAll();
@@ -83,7 +86,7 @@ public class ClienteService {
         enderecoRepository.saveAll(cliente.getEnderecos());
         try {
             return clienteRepository.save(cliente);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             //Atributo email da entidade Cliente anotado com @Column(unique = true)
             //Nao permite repeticoes. Chave unica
             throw new DataIntegrityException("Email já cadastrado!");
@@ -92,7 +95,7 @@ public class ClienteService {
 
     private Cliente convertToEntity(ClienteInsertDTO insertDTO) {
         Cliente cliente = new Cliente(insertDTO.getNome(), insertDTO.getEmail(), insertDTO.getCpfCnpj(),
-                TipoCliente.toEnum(insertDTO.getTipoCliente()));
+                TipoCliente.toEnum(insertDTO.getTipoCliente()), passwordEncoder.encode(insertDTO.getSenha()));
 
         Cidade cidade = findCidadeById(insertDTO.getCidadeId());
 
