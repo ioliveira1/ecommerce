@@ -5,3 +5,7 @@ spring:
 default:
   sender: "igorfoliveira@gmail.com"
   recipient: "igorfoliveira@gmail.com"
+
+jwt:
+  secret: TokenEcommerce
+  expiration: 60000
