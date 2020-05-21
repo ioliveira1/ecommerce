@@ -2,6 +2,7 @@ package com.ioliveira.ecommerce.config.security;
 
 import com.ioliveira.ecommerce.config.security.authentication.JWTAuthenticationFilter;
 import com.ioliveira.ecommerce.config.security.authentication.JWTUtil;
+import com.ioliveira.ecommerce.config.security.authorization.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();// Exige autenticacao para o restante
 
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));//Registra o filtro de autenticacao
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));//Registra o filtro de autorizacao
 
         //Assegura que o back-end nao criara sessao de usuario
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -70,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    //Permite o acceso basico aos endpoints por multiplas fontes. Por padrao, nao sao permitidas
+        //Permite o acceso basico aos endpoints por multiplas fontes. Por padrao, nao sao permitidas
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
