@@ -7,6 +7,7 @@ import com.ioliveira.ecommerce.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -40,6 +41,7 @@ public class CategoriaController {
         return ResponseEntity.ok().body(categoriaService.findPage(page, linesPerPage, direction, orderBy));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaRequestDTO requestDTO) {
         Categoria insert = categoriaService.insert(requestDTO);
@@ -51,6 +53,7 @@ public class CategoriaController {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> update(@PathVariable Integer id,
                                        @Valid @RequestBody CategoriaRequestDTO requestDTO) {
@@ -58,6 +61,7 @@ public class CategoriaController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
         categoriaService.deleteById(id);

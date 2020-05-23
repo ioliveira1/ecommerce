@@ -8,6 +8,7 @@ import com.ioliveira.ecommerce.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,6 +23,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<ClienteResponseDTO>> findAll() {
         return ResponseEntity.ok().body(clienteService.findAll());
@@ -32,6 +34,7 @@ public class ClienteController {
         return ResponseEntity.ok().body(clienteService.findById(id));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(path = "/page")
     public ResponseEntity<Page<ClienteResponseDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -48,6 +51,7 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
         clienteService.deleteById(id);

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -43,6 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/categorias/**"
     };
 
+    //Somente escrita
+    private static final String[] PUBLIC_MATCHERS_POST = {
+            "/clientes/**"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -55,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();//Desabilita a protecao de ataques CSRF. Ataques baseados pelo armazenamento da autenticacao em sessao
 
         http.authorizeRequests()
+                .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()//So permite o metodo POST para a lista em PUBLIC_MATCHERS_POST
                 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()//So permite o metodo GET para a lista em PUBLIC_MATCHERS_GET
                 .antMatchers(PUBLIC_MATCHERS).permitAll()//Permite o acesso a todos os caminhos no vetor PUBLIC_MATCHERS
                 .anyRequest().authenticated();// Exige autenticacao para o restante
