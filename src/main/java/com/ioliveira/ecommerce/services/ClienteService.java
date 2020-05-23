@@ -1,15 +1,18 @@
 package com.ioliveira.ecommerce.services;
 
+import com.ioliveira.ecommerce.config.security.authentication.UserSS;
 import com.ioliveira.ecommerce.controllers.dto.request.ClienteInsertDTO;
 import com.ioliveira.ecommerce.controllers.dto.request.ClienteRequestDTO;
 import com.ioliveira.ecommerce.controllers.dto.response.ClienteResponseDTO;
 import com.ioliveira.ecommerce.entities.Cidade;
 import com.ioliveira.ecommerce.entities.Cliente;
 import com.ioliveira.ecommerce.entities.Endereco;
+import com.ioliveira.ecommerce.entities.enums.Perfil;
 import com.ioliveira.ecommerce.entities.enums.TipoCliente;
 import com.ioliveira.ecommerce.repositories.CidadeRepository;
 import com.ioliveira.ecommerce.repositories.ClienteRepository;
 import com.ioliveira.ecommerce.repositories.EnderecoRepository;
+import com.ioliveira.ecommerce.services.exceptions.AuthorizationException;
 import com.ioliveira.ecommerce.services.exceptions.DataIntegrityException;
 import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +48,13 @@ public class ClienteService {
     }
 
     public Cliente findById(Integer id) {
-        return clienteRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! ID: " + id));
+        final UserSS userAuthenticated = UserService.userAuthenticated();
+        if (userAuthenticated != null &&
+                (userAuthenticated.hasRole(Perfil.ADMIN) || userAuthenticated.getId().equals(id))) {
+            return clienteRepository.findById(id)
+                    .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! ID: " + id));
+        }
+        throw new AuthorizationException("Acesso negado!");
     }
 
     public Page<ClienteResponseDTO> findPage(Integer page, Integer linesPerPage, String direction, String orderBy) {

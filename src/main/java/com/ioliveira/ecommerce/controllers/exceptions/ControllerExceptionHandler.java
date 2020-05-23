@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.controllers.exceptions;
 
+import com.ioliveira.ecommerce.services.exceptions.AuthorizationException;
 import com.ioliveira.ecommerce.services.exceptions.DataIntegrityException;
 import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,18 @@ public class ControllerExceptionHandler {
                 .forEach(error -> validationError.addError(error.getField(), error.getDefaultMessage()));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationError);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> authorization(AuthorizationException exception, HttpServletRequest request) {
+        StandardError standardError = StandardError.builder()
+                .status(HttpStatus.FORBIDDEN.value())
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(standardError);
     }
 
 }
