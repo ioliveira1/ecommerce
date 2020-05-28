@@ -25,11 +25,14 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping(path = "/refresh_token")
-    public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
+    public ResponseEntity<String> refreshToken(HttpServletResponse response) {
         final UserSS userAuthenticated = UserService.userAuthenticated();
         final String token = jwtUtil.generateToken(userAuthenticated.getUsername());
-        response.addHeader("Authorization", "Bearer " + token);
-        return ResponseEntity.noContent().build();
+        if (token != null){
+            response.addHeader("Authorization", "Bearer " + token);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().body("Nenhum usuário logado!");
     }
 
     @PostMapping(path = "/forgot")
