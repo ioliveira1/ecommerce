@@ -1,5 +1,6 @@
 package com.ioliveira.ecommerce.services.email;
 
+import com.ioliveira.ecommerce.entities.Cliente;
 import com.ioliveira.ecommerce.entities.Pedido;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,15 @@ public class MockEmailService implements EmailService {
         SimpleMailMessage mailMessage = prepareMessageFromPedido(pedido);
         mailMessage.setFrom(sender);
         LOG.info("Simulando envio de email");
+        LOG.info(mailMessage.toString());
+        LOG.info("Email enviado");
+    }
+
+    @Override
+    public void sendNewPassword(Cliente cliente, String newPassword) {
+        SimpleMailMessage mailMessage = prepareNewPassword(cliente, newPassword);
+        mailMessage.setFrom(sender);
+        LOG.info("Simulando envio de nova senha");
         LOG.info(mailMessage.toString());
         LOG.info("Email enviado");
     }

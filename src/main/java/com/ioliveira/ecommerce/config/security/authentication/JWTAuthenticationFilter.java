@@ -23,7 +23,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         //Set da implementacao maunal em caso de falha na autenticacao
         setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
-        setFilterProcessesUrl("/auth");//Path customizado de login
+        //setFilterProcessesUrl("/auth");Path customizado de login
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
