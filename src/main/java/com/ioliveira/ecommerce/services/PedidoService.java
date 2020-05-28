@@ -1,15 +1,21 @@
 package com.ioliveira.ecommerce.services;
 
+import com.ioliveira.ecommerce.config.security.authentication.UserSS;
+import com.ioliveira.ecommerce.entities.Cliente;
 import com.ioliveira.ecommerce.entities.PagamentoBoleto;
 import com.ioliveira.ecommerce.entities.Pedido;
 import com.ioliveira.ecommerce.entities.enums.EstadoPagamento;
 import com.ioliveira.ecommerce.repositories.ItemPedidoRepository;
 import com.ioliveira.ecommerce.repositories.PagamentoRepository;
 import com.ioliveira.ecommerce.repositories.PedidoRepository;
-import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
 import com.ioliveira.ecommerce.services.email.EmailService;
+import com.ioliveira.ecommerce.services.exceptions.AuthorizationException;
+import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
 import com.ioliveira.ecommerce.services.utils.BoletoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +68,16 @@ public class PedidoService {
         emailService.sendEmail(pedidoSaved);
 
         return pedidoSaved;
+    }
+
+    public Page<Pedido> findPage(Integer page, Integer linesPerPage, String direction, String orderBy) {
+        final UserSS userAuthenticated = UserService.userAuthenticated();
+        if (userAuthenticated == null) {
+            throw new AuthorizationException("Acesso negado!");
+        }
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        final Cliente cliente = clienteService.findById(userAuthenticated.getId());
+        return pedidoRepository.findByCliente(cliente, pageRequest);
     }
 
 }
