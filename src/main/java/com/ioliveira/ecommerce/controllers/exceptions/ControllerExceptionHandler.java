@@ -2,6 +2,7 @@ package com.ioliveira.ecommerce.controllers.exceptions;
 
 import com.ioliveira.ecommerce.services.exceptions.AuthorizationException;
 import com.ioliveira.ecommerce.services.exceptions.DataIntegrityException;
+import com.ioliveira.ecommerce.services.exceptions.FileException;
 import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,18 @@ public class ControllerExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(standardError);
+    }
+
+    @ExceptionHandler(FileException.class)
+    public ResponseEntity<StandardError> file(FileException exception, HttpServletRequest request) {
+        StandardError standardError = StandardError.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(exception.getMessage())
+                .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 
 }

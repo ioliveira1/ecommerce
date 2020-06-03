@@ -12,7 +12,7 @@ jwt:
 
 aws:
   access_key_id:
-  secret_access_key:
+  secret_access_key: 
 s3:
   bucket: ionic-spring-boot
   region: sa-east-1
