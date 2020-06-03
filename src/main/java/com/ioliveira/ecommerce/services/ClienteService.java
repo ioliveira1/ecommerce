@@ -23,7 +23,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,8 @@ public class ClienteService {
     private EnderecoRepository enderecoRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private S3Service s3Service;
 
     public List<ClienteResponseDTO> findAll() {
         List<Cliente> clienteList = clienteRepository.findAll();
@@ -119,6 +123,10 @@ public class ClienteService {
     private Cidade findCidadeById(Integer id) {
         return cidadeRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! ID: " + id));
+    }
+
+    public URI uploadProfilePicture(MultipartFile multipartFile) {
+        return s3Service.uploadFile(multipartFile);
     }
 
 }
