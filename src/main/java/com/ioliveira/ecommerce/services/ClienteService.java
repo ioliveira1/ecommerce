@@ -47,8 +47,11 @@ public class ClienteService {
     @Autowired
     private ImageService imageService;
 
-    @Value("${img.prefix.client.profile}")
+    @Value("${img.profile.client.prefix}")
     private String prefix;
+
+    @Value("${img.profile.size}")
+    private Integer size;
 
     public List<ClienteResponseDTO> findAll() {
         List<Cliente> clienteList = clienteRepository.findAll();
@@ -136,7 +139,11 @@ public class ClienteService {
         final UserSS userAuthenticated = UserService.userAuthenticated();
 
         if (userAuthenticated != null) {
-            final BufferedImage jpgImageFromFile = imageService.getJpgImageFromFile(multipartFile);
+            BufferedImage jpgImageFromFile = imageService.getJpgImageFromFile(multipartFile);
+
+            jpgImageFromFile = imageService.cropSquare(jpgImageFromFile);
+            jpgImageFromFile = imageService.resize(jpgImageFromFile, size);
+
             final String fileName = prefix + userAuthenticated.getId() + ".jpg";
             return s3Service.uploadFile(imageService.getInputStream(jpgImageFromFile, "jpg"), fileName, "image");
         }

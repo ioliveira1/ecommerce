@@ -2,6 +2,7 @@ package com.ioliveira.ecommerce.services;
 
 import com.ioliveira.ecommerce.services.exceptions.FileException;
 import org.apache.commons.io.FilenameUtils;
+import org.imgscalr.Scalr;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +47,24 @@ public class ImageService {
         } catch (IOException e) {
             throw new FileException("Erro ao ler arquivo.");
         }
+    }
+
+    public BufferedImage cropSquare(BufferedImage image) {
+        int min = image.getWidth();
+        if (image.getHeight() <= image.getWidth()) {
+            min = image.getHeight();
+        }
+
+        return Scalr.crop(image,
+                (image.getWidth() / 2) - (min / 2),
+                (image.getHeight() / 2) - (min / 2),
+                min,
+                min);
+
+    }
+
+    public BufferedImage resize(BufferedImage image, int size) {
+        return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, size);
     }
 
 }
