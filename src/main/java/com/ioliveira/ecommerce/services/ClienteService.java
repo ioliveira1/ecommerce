@@ -16,6 +16,7 @@ import com.ioliveira.ecommerce.services.exceptions.AuthorizationException;
 import com.ioliveira.ecommerce.services.exceptions.DataIntegrityException;
 import com.ioliveira.ecommerce.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +44,11 @@ public class ClienteService {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private S3Service s3Service;
+    @Autowired
+    private ImageService imageService;
+
+    @Value("${img.prefix.client.profile}")
+    private String prefix;
 
     public List<ClienteResponseDTO> findAll() {
         List<Cliente> clienteList = clienteRepository.findAll();
@@ -126,7 +133,15 @@ public class ClienteService {
     }
 
     public URI uploadProfilePicture(MultipartFile multipartFile) {
-        return s3Service.uploadFile(multipartFile);
+        final UserSS userAuthenticated = UserService.userAuthenticated();
+
+        if (userAuthenticated != null) {
+            final BufferedImage jpgImageFromFile = imageService.getJpgImageFromFile(multipartFile);
+            final String fileName = prefix + userAuthenticated.getId() + ".jpg";
+            return s3Service.uploadFile(imageService.getInputStream(jpgImageFromFile, "jpg"), fileName, "image");
+        }
+
+        throw new AuthorizationException("Acesso negado!");
     }
 
 }
