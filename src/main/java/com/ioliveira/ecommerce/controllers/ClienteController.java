@@ -75,4 +75,9 @@ public class ClienteController {
         return ResponseEntity.created(clienteService.uploadProfilePicture(file)).build();
     }
 
+    @GetMapping(path = "/email")
+    public ResponseEntity<Cliente> findByEmail(@RequestParam(name = "email") String email) {
+        return ResponseEntity.ok().body(clienteService.findByEmail(email));
+    }
+
 }

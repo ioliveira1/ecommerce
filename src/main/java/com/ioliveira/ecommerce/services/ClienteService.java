@@ -151,4 +151,17 @@ public class ClienteService {
         throw new AuthorizationException("Acesso negado!");
     }
 
+    public Cliente findByEmail(String email) {
+        final UserSS userAuthenticated = UserService.userAuthenticated();
+        if (userAuthenticated != null &&
+                (userAuthenticated.hasRole(Perfil.ADMIN) || userAuthenticated.getUsername().equals(email))) {
+            Cliente cliente = clienteRepository.findByEmail(email);
+            if (cliente != null) {
+                return cliente;
+            }
+            throw new ObjectNotFoundException("Objeto não encontrado! Email: " + email);
+        }
+        throw new AuthorizationException("Acesso negado!");
+    }
+
 }
