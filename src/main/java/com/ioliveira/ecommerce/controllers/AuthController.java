@@ -30,6 +30,7 @@ public class AuthController {
         final String token = jwtUtil.generateToken(userAuthenticated.getUsername());
         if (token != null){
             response.addHeader("Authorization", "Bearer " + token);
+            response.addHeader("access-control-expose-headers", "Authorization");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.badRequest().body("Nenhum usuário logado!");
