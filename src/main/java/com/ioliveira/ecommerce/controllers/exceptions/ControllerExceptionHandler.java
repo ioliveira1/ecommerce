@@ -19,10 +19,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException exception, HttpServletRequest request) {
         StandardError standardError = StandardError.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
+                .error("Não encontrado")
                 .message(exception.getMessage())
                 .path(request.getRequestURI())
-                .timestamp(LocalDateTime.now())
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
@@ -31,10 +32,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(DataIntegrityException.class)
     public ResponseEntity<StandardError> dataIntegrity(DataIntegrityException exception, HttpServletRequest request) {
         StandardError standardError = StandardError.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
+                .error("Integridade de dados")
                 .message(exception.getMessage())
                 .path(request.getRequestURI())
-                .timestamp(LocalDateTime.now())
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
@@ -42,24 +44,27 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardError> controllerValidation(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        ValidationError validationError = new ValidationError(HttpStatus.BAD_REQUEST.value(),
-                "Erro de validação.", request.getRequestURI(),
-                LocalDateTime.now());
+        ValidationError validationError = new ValidationError(LocalDateTime.now(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação",
+                exception.getMessage(),
+                request.getRequestURI());
 
         exception.getBindingResult()
                 .getFieldErrors()
                 .forEach(error -> validationError.addError(error.getField(), error.getDefaultMessage()));
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationError);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(validationError);
     }
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<StandardError> authorization(AuthorizationException exception, HttpServletRequest request) {
         StandardError standardError = StandardError.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.FORBIDDEN.value())
+                .error("Acesso negado")
                 .message(exception.getMessage())
                 .path(request.getRequestURI())
-                .timestamp(LocalDateTime.now())
                 .build();
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(standardError);
@@ -68,10 +73,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(FileException.class)
     public ResponseEntity<StandardError> file(FileException exception, HttpServletRequest request) {
         StandardError standardError = StandardError.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
+                .error("Erro de arquivo")
                 .message(exception.getMessage())
                 .path(request.getRequestURI())
-                .timestamp(LocalDateTime.now())
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);

@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 @Setter
 @Builder(toBuilder = true)
 public class StandardError implements Serializable {
-    private Integer status;
-    private String message;
-    private String path;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime timestamp;
+    private Integer status;
+    private String error;
+    private String message;
+    private String path;
 }
